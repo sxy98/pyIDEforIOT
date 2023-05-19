@@ -1,9 +1,10 @@
 # pyIDEforIOT 
-[![Java-Server API](https://img.shields.io/badge/Java.Server-1.7%2B-brightgreen.svg?style=flat)](https://github.com/TommyLemon/APIJSON/tree/master/APIJSON-Java-Server) 
-[![CSharp-Server API](https://img.shields.io/badge/CSharp.Server-2.1%2B-brightgreen.svg?style=flat)](https://github.com/liaozb/APIJSON.NET) 
+
+[![JavaScrpit API](https://img.shields.io/badge/JavaScript-ES6%2B-brightgreen.svg?style=flat)](https://github.com/TommyLemon/APIJSON/tree/master/APIJSON-JavaScript) 
+[![Vue.js API](https://img.shields.io/badge/Vue.js-2.0%2B-brightgreen.svg?style=flat)](https://github.com/TommyLemon/APIJSON/tree/master/APIJSON-JavaScript/APIJSON-JS-Vue)
+[![Python API](https://img.shields.io/badge/Python-2.7%2B-brightgreen.svg?style=flat)](https://github.com/TommyLemon/APIJSON/tree/master/APIJSON-Python) <br />
 
 
-[English](https://github.com/TommyLemon/APIJSON/blob/master/Document-English.md)  &nbsp;  [通用文档](https://github.com/TommyLemon/APIJSON/blob/master/Document.md)  &nbsp;  [视频教程](http://i.youku.com/apijson)  &nbsp;  [在线工具](http://apijson.org)
 
 ![](https://raw.githubusercontent.com/TommyLemon/APIJSON/master/logo.png) 
 
@@ -41,13 +42,13 @@
 
 QQ技术交流群：xx
 
-如果有什么问题或建议可以[提ISSUE](https://github.com/TommyLemon/APIJSON/issues)、加群或者[发我邮件](https://github.com/TommyLemon)，交流技术，分享经验。<br >
-如果你解决了某些bug，或者新增了一些功能，欢迎[贡献代码](https://github.com/TommyLemon/APIJSON/pulls)，感激不尽。
+如果有什么问题或建议可以[提ISSUE](https://github.com/sxy98/pyIDEforIOT/issues)、加群或者[发我邮件](https://github.com/sxy98)，交流技术，分享经验。<br >
+如果你解决了某些bug，或者新增了一些功能，欢迎[贡献代码](https://github.com/sxy98/pyIDEforIOT/pulls)，感激不尽。
 
 
 
 ### 我要赞赏
 创作不易，右上角点 ⭐Star 支持下吧，谢谢 ^_^ <br />
-[https://github.com/TommyLemon/APIJSON](https://github.com/TommyLemon/APIJSON)
+[https://github.com/sxy98/pyIDEforIOT](https://github.com/sxy98/pyIDEforIOT)
 
  
