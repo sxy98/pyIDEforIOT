@@ -6,9 +6,9 @@
 
 
 
-![](https://raw.githubusercontent.com/TommyLemon/APIJSON/master/logo.png) 
+![](https://user-1301443531.cos.ap-nanjing.myqcloud.com/iotfont/iot.png) 
 
-为物联网开发的多种语言编辑器。<br />
+为物联网开发的多种语言编辑器,第一版本为 python。<br />
 完美集成物联网多种协议，包括MQTT、HTTP、TCP等。<br />
 能大幅降低开发和沟通成本，简化开发流程，缩短开发周期。<br />
 适合中小型项目，尤其是互联网物联网创业项目和企业自用项目。<br />
@@ -34,13 +34,13 @@
 
 ## 关于作者
 <div style="float:left">
-  <a href="https://github.com/TommyLemon"><img src="https://avatars1.githubusercontent.com/u/5738175?s=400&u=5b2f372f0c03fae8f249d2d754e38971c2e17b92&v=4" height="90" width="90" ></a>
-  <a href="https://github.com/linlwqq"><img src="https://avatars1.githubusercontent.com/u/5328313?s=460&v=4"  height="90" width="90" ></a>
+  <a href="https://github.com/sxy98"><img src="https://user-1301443531.cos.ap-nanjing.myqcloud.com/iotfont/p2.png" height="90" width="90" ></a>
+  <a href="https://github.com/liyue1997"><img src="https://user-1301443531.cos.ap-nanjing.myqcloud.com/iotfont/p1.png"  height="90" width="90" ></a>
 </div>
 
 <br />
 
-QQ技术交流群：xx
+QQ技术交流群：552862394
 
 如果有什么问题或建议可以[提ISSUE](https://github.com/sxy98/pyIDEforIOT/issues)、加群或者[发我邮件](https://github.com/sxy98)，交流技术，分享经验。<br >
 如果你解决了某些bug，或者新增了一些功能，欢迎[贡献代码](https://github.com/sxy98/pyIDEforIOT/pulls)，感激不尽。
