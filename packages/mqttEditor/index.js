@@ -4,7 +4,7 @@
 import MqttEditor from './src/main.vue'
 
 // 为组件添加 install 方法，用于按需引入
-MqttEditor.install = function (Vue) {
+MqttEditor.install = (Vue) => {
   Vue.component(MqttEditor.name, MqttEditor)
 }
 

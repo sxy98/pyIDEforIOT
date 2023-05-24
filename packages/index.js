@@ -9,7 +9,7 @@ const components = [
 ]
 
 // 定义 install 方法
-const install = function (Vue) {
+const install = (Vue) => {
   if (install.installed) return
   install.installed = true
   // 遍历并注册全局组件
