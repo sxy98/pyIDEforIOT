@@ -1,7 +1,7 @@
 const fn = () => {
   const fs = require('fs')
-  const __dir = './packages'
-  const dir = fs.readdirSync(__dir)
+  const _dir = './packages'
+  const dir = fs.readdirSync(_dir)
   const path = require('path')
   const changePath = (file) => { // 对路径进行转化处理
     let re = file
@@ -19,7 +19,7 @@ const fn = () => {
   }
   // const commonImport = fs.readFileSync('./src/common.js')
   dir.forEach((fileName) => {
-    const filePath = path.join(__dir, `/${fileName}`)
+    const filePath = path.join(_dir, `/${fileName}`)
     const indexPath = path.join(filePath, '/index.vue')
     const hasIndex = fs.existsSync(indexPath)
     if (!hasIndex) {

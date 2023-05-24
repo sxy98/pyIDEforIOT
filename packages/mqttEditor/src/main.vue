@@ -6,6 +6,9 @@
         v-model="code"
         :options="cmOption"
       />
+      <button class="run" @click="run">
+        运行<i class="icon-run"></i>
+      </button>
     </div>
   </div>
 </template>
@@ -41,8 +44,7 @@ export default {
   data() {
     return {
       code:
-`#!/usr/bin/python
-# Write Python 3 code in this online editor and run it.
+`# Write Python 3 code in this online editor and run it.
 print("Hello, World!");
 `,
       cmOption: {
@@ -65,6 +67,13 @@ print("Hello, World!");
     pyScriptElement.textContent = this.code;
     // 替换占位符为 <py-script> 元素
     placeholder && placeholder.replaceWith(pyScriptElement);
+  },
+  methods: {
+    // 运行
+    run() {
+      // eslint-disable-next-line no-undef
+      pyscript.interpreter.run(this.code)
+    }
   }
 };
 </script>
@@ -73,7 +82,45 @@ print("Hello, World!");
 .mqttEditor-wrapper{
   height: 400px;
   .codemirror{
-    display: flex;
+    height: 100%;
+    .run{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid #ccc;
+      width: 80px;
+      height: 40px;
+      border-radius: 4px;
+      i{
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-left: 4px;
+        &.icon-run {
+          background-image: url(../../../public/icon/run.png);
+          background-size: 100%;
+        }
+      }
+      &:hover{
+        opacity: 0.9;
+      }
+    }
   }
+}
+</style>
+<style>
+.CodeMirror{
+  height: 100%;
+}
+.vue-codemirror{
+  width: 100%;
+  height: calc(100% - 50px);
+}
+py-script{
+  display: none;
+}
+.py-terminal{
+  background: #383f4b;
+  color: #78cf8a;
 }
 </style>
