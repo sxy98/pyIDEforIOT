@@ -38,6 +38,7 @@ module.exports = {
     'no-unused-vars': 0,
     'import/extensions': 0,
     'global-require': 0,
-    'quotes': 0
+    'quotes': 0,
+    "linebreak-style": 0
   },
 };
