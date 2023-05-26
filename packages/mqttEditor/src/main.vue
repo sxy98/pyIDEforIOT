@@ -1,5 +1,10 @@
 <template>
   <div class="mqttEditor-wrapper">
+    <py-config type="json">
+    {
+      "packages": ["./paho_mqtt-1.6.1-py3-none-any.whl"]
+    }
+    </py-config>
     <div class="py-script-placeholder"></div>
     <div class="codemirror">
       <codemirror
@@ -45,7 +50,19 @@ export default {
     return {
       code:
 `# Write Python 3 code in this online editor and run it.
-print("Hello, World!");
+def on_connect(client, userdata, flags, rc):
+  if rc == 0:
+    print("Connected to MQTT Broker!")
+  else:
+    print("Failed to connect, return code ", rc)
+
+print("Hello, let us start!")
+from paho.mqtt import client as mqtt_client
+client = mqtt_client.Client('test001')
+client.on_connect = on_connect
+client.connect('192.168.3.211', 1883)
+print("mqtt has connected!")
+
 `,
       cmOption: {
         autoCloseBrackets: true,
