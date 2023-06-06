@@ -1,24 +1,72 @@
 <template>
   <div class="mqttEditor-wrapper">
-    <py-config type="json">
-    {
-      "packages": ["./paho_mqtt-1.6.1-py3-none-any.whl"]
-    }
-    </py-config>
+    <div class="py-config-placeholder"></div>
     <div class="py-script-placeholder"></div>
-    <div class="codemirror">
-      <codemirror
-        v-model="code"
-        :options="cmOption"
-      />
-      <button class="run" @click="run">
-        运行<i class="icon-run"></i>
-      </button>
+    <div class="IDE-wrapper">
+      <div class="codemirror">
+        <codemirror
+          v-model="code"
+          :options="cmOption"
+        />
+      </div>
+      <div class="btnCol">
+        <button class="run" @click="run">
+          运行<i class="icon-run"></i>
+        </button>
+      </div>
+      <div class="py-terminal-placeholder"></div>
     </div>
   </div>
 </template>
 
 <script>
+import * as mqtt from "mqtt/dist/mqtt.min"
+// 创建客户端实例
+const options = {
+  // Clean session
+  clean: true,
+  connectTimeout: 4000,
+  // 认证信息
+  clientId: 'emqx_test',
+}
+let client = null
+function mqttConnect(url, topic) {
+  client = mqtt.connect(url, options)
+  // eslint-disable-next-line no-undef
+  const onmessage = pyodideGlobals.get('onMessage');
+  client.on('connect', () => {
+    console.log('Connected')
+    // 订阅主题
+    client.subscribe(topic, (err) => {
+      // eslint-disable-next-line no-undef
+      const funError = pyodideGlobals.get('onError');
+      if (!err) {
+        // 发布消息
+        funError('Connected Success')
+      } else {
+        funError(err)
+      }
+    })
+  })
+  // 接收消息
+  client.on('message', (topic, message) => {
+    // message is Buffer
+    console.log(topic, message.toString())
+    onmessage(topic, message.toString())
+    // client.end()
+  })
+}
+function createObject(object, variableName) {
+  // Bind a variable whose name is the string variableName
+  // to the object called 'object'
+  const execString = variableName + " = object"
+  console.log("Running '" + execString + "'");
+  // eslint-disable-next-line no-eval
+  eval(execString)
+}
+</script>
+<script>
+import { loadScriptsFromDirectory } from '../../../public/util.js'
 import { codemirror } from 'vue-codemirror'
 // import base style
 import 'codemirror/lib/codemirror.css'
@@ -49,19 +97,26 @@ export default {
   data() {
     return {
       code:
-`# Write Python 3 code in this online editor and run it.
-def on_connect(client, userdata, flags, rc):
-  if rc == 0:
-    print("Connected to MQTT Broker!")
-  else:
-    print("Failed to connect, return code ", rc)
+`print('*************************************************************************')
+print('*****************软件研发部全体成员祝贺云开乔迁之喜*************************')
+print('*************************************************************************')
+print('***python在线编辑器，可以在线完成python教学任务，学生可以在线免安装编程学习***')
+print('***python在线开发还可以和物联网教学结合，通过连接MQTT，完成设备数据展示和控制*')
+print('***python在线开发还可以跟influxDB结合，完成大数据查询、处理方面的教学********')
+print('***python在线开发也可以跟电商配合，完成市场运营数据方面的查询、分析的教学*****')
+print('*******************下面展示一下与物联网教学配合连接MQTT*********************')
+print('*************************************************************************')
+from js import mqttConnect
+from js import createObject
+from pyodide.ffi import create_proxy
+createObject(create_proxy(globals()), "pyodideGlobals")
+def onMessage(topic, message):
+   print('收到来自:'+topic+'的消息:'+message)
 
-print("Hello, let us start!")
-from paho.mqtt import client as mqtt_client
-client = mqtt_client.Client('test001')
-client.on_connect = on_connect
-client.connect('192.168.3.211', 1883)
-print("mqtt has connected!")
+def onError(message):
+   print('连接信息:'+message)
+
+mqttConnect('ws://broker.emqx.io:8083/mqtt','/pyIDEforIOT/data')
 
 `,
       cmOption: {
@@ -76,18 +131,36 @@ print("mqtt has connected!")
       }
     }
   },
-  mounted() {
-    // 获取占位符元素
-    const placeholder = this.$el.querySelector('.py-script-placeholder');
-    // 创建 <py-script> 元素
-    const pyScriptElement = document.createElement('py-script');
-    pyScriptElement.textContent = this.code;
-    // 替换占位符为 <py-script> 元素
-    placeholder && placeholder.replaceWith(pyScriptElement);
+  async mounted() {
+    this.configHandel()
+    this.terminalHandel()
+    this.scriptHandel()
+    await loadScriptsFromDirectory('https://pyscript.net/latest/pyscript.js')
   },
   methods: {
+    scriptHandel() {
+      const placeholder = this.$el.querySelector('.py-script-placeholder');
+      const Element = document.createElement('py-script');
+      Element.textContent = this.code;
+      placeholder && placeholder.replaceWith(Element);
+    },
+    configHandel() {
+      const placeholder = this.$el.querySelector('.py-config-placeholder');
+      const Element = document.createElement('py-config');
+      Element.textContent =
+        `
+          terminal = false
+        `;
+      placeholder && placeholder.replaceWith(Element);
+    },
+    terminalHandel() {
+      const placeholder = this.$el.querySelector('.py-terminal-placeholder');
+      const Element = document.createElement('py-terminal');
+      placeholder && placeholder.replaceWith(Element);
+    },
     // 运行
     run() {
+      console.log(this)
       // eslint-disable-next-line no-undef
       pyscript.interpreter.run(this.code)
     }
@@ -97,8 +170,20 @@ print("mqtt has connected!")
 
 <style scoped lang="scss">
 .mqttEditor-wrapper{
-  height: 400px;
-  .codemirror{
+  height: 100%;
+  .IDE-wrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .btnCol{
+    flex-shrink: 0;
+    padding: 10px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
     .run{
       display: flex;
@@ -123,21 +208,33 @@ print("mqtt has connected!")
       }
     }
   }
+  .codemirror{
+    height: 100%;
+    width: calc(50% - 100px);
+  }
 }
 </style>
 <style>
+@import url("../../../public/pyscript.css");
 .CodeMirror{
   height: 100%;
 }
 .vue-codemirror{
   width: 100%;
-  height: calc(100% - 50px);
+  height: 100%;
 }
-py-script{
+py-script, py-config{
   display: none;
+}
+py-terminal{
+  height: 100%;
+  width: 50%;
 }
 .py-terminal{
   background: #383f4b;
   color: #78cf8a;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
 }
 </style>
