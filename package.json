@@ -1,14 +1,39 @@
 {
   "name": "pyideforiot",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
+  "private": false,
   "main": "lib/index.js",
   "style": "lib/theme/index.css",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "cross-env rimraf ./lib && node ./build/build.js",
     "lint": "vue-cli-service lint"
   },
+  "homepage": "https://github.com/sxy98/pyIDEforIOT",
+  "bugs": "https://github.com/sxy98/pyIDEforIOT/issues",
+  "description": "为物联网开发的多种语言编辑器",
+  "author": {
+    "name" : "sxy98",
+    "email" : "sunxiaoyan98@gmail.com",
+    "url" : "https://github.com/sxy98"
+  },
+  "license": "MIT",
+  "keywords": ["Vue","Python"],
+  "contributors": [
+    {
+      "name" : "liyue1997",
+      "email" : "liyue1997@gmail.com",
+      "url" : "https://github.com/liyue1997"
+    },
+    {
+      "name" : "sxy98",
+      "email" : "sunxiaoyan98@gmail.com",
+      "url" : "https://github.com/sxy98"
+    }
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "cross-env": "^7.0.3",
