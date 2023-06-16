@@ -21,53 +21,8 @@
 
 <script>
 import * as mqtt from "mqtt/dist/mqtt.min"
-// 创建客户端实例
-const options = {
-  // Clean session
-  clean: true,
-  connectTimeout: 4000,
-  // 认证信息
-  clientId: 'emqx_test',
-}
-let client = null
-function mqttConnect(url, topic) {
-  client = mqtt.connect(url, options)
-  // eslint-disable-next-line no-undef
-  const onmessage = pyodideGlobals.get('onMessage');
-  client.on('connect', () => {
-    console.log('Connected')
-    // 订阅主题
-    client.subscribe(topic, (err) => {
-      // eslint-disable-next-line no-undef
-      const funError = pyodideGlobals.get('onError');
-      if (!err) {
-        // 发布消息
-        funError('Connected Success')
-      } else {
-        funError(err)
-      }
-    })
-  })
-  // 接收消息
-  client.on('message', (topic, message) => {
-    // message is Buffer
-    console.log(topic, message.toString())
-    onmessage(topic, message.toString())
-    // client.end()
-  })
-}
-function createObject(object, variableName) {
-  // Bind a variable whose name is the string variableName
-  // to the object called 'object'
-  const execString = variableName + " = object"
-  console.log("Running '" + execString + "'");
-  // eslint-disable-next-line no-eval
-  eval(execString)
-}
-</script>
-<script>
-import { loadScriptsFromDirectory } from '../../../public/util.js'
 import { codemirror } from 'vue-codemirror'
+import { loadScriptsFromDirectory, loadCssFromDirectory } from '../../../public/util.js'
 // import base style
 import 'codemirror/lib/codemirror.css'
 // language
@@ -89,6 +44,55 @@ import 'codemirror/addon/search/searchcursor.js'
 import 'codemirror/addon/search/search.js'
 import 'codemirror/keymap/emacs.js'
 
+// 创建客户端实例
+const options = {
+  // Clean session
+  clean: true,
+  // 认证信息
+  clientId: 'emqx_test',
+}
+let client = null
+function mqttConnect(url, topic) {
+  client = mqtt.connect(url, options)
+  const onMessage = new CustomEvent('onMessage')
+  const onError = new CustomEvent('onError')
+  client.on('connect', () => {
+    onMessage.data = {
+      topic: 'js脚本', message: '连接成功'
+    }
+    document.dispatchEvent(onMessage)
+    // 订阅主题
+    client.subscribe(topic, (err) => {
+      if (err) {
+        onError.data = {
+          message: err.message || '未知错误，连接失败'
+        }
+        document.dispatchEvent(onError)
+      }
+    })
+  })
+  // 发生错误
+  client.on('error', (err) => {
+    onError.data = {
+      message: err.message || '未知错误，连接失败'
+    }
+    document.dispatchEvent(onError)
+  })
+  // 接收消息
+  client.on('message', (topic, message) => {
+    // message is Buffer
+    onMessage.data = {
+      topic, message: message.toString()
+    }
+    document.dispatchEvent(onMessage)
+  })
+  client.on('close', () => {
+    onMessage.data = {
+      topic: 'js脚本', message: '连接被关闭'
+    }
+    document.dispatchEvent(onMessage)
+  })
+}
 export default {
   name: 'MqttEditor',
   components: {
@@ -97,27 +101,9 @@ export default {
   data() {
     return {
       code:
-`print('*************************************************************************')
-print('*****************软件研发部全体成员祝贺云开乔迁之喜*************************')
-print('*************************************************************************')
-print('***python在线编辑器，可以在线完成python教学任务，学生可以在线免安装编程学习***')
-print('***python在线开发还可以和物联网教学结合，通过连接MQTT，完成设备数据展示和控制*')
-print('***python在线开发还可以跟influxDB结合，完成大数据查询、处理方面的教学********')
-print('***python在线开发也可以跟电商配合，完成市场运营数据方面的查询、分析的教学*****')
-print('*******************下面展示一下与物联网教学配合连接MQTT*********************')
-print('*************************************************************************')
-from js import mqttConnect
-from js import createObject
-from pyodide.ffi import create_proxy
-createObject(create_proxy(globals()), "pyodideGlobals")
-def onMessage(topic, message):
-   print('收到来自:'+topic+'的消息:'+message)
-
-def onError(message):
-   print('连接信息:'+message)
-
-mqttConnect('ws://broker.emqx.io:8083/mqtt','/pyIDEforIOT/data')
-
+`from js import document, Event
+pydone = Event.new("py-done")
+document.dispatchEvent(pydone)
 `,
       cmOption: {
         autoCloseBrackets: true,
@@ -131,7 +117,37 @@ mqttConnect('ws://broker.emqx.io:8083/mqtt','/pyIDEforIOT/data')
       }
     }
   },
+  created() {
+    loadCssFromDirectory('https://pyscript.net/latest/pyscript.css')
+  },
   async mounted() {
+    window.mqttConnect = mqttConnect
+    const that = this
+    const ev = new Event("message")
+    document.addEventListener("py-done", () => {
+      console.log('加载完成了')
+      this.code = `print('*************************************************************************')
+print('***python在线编辑器，可以在线完成python教学任务，学生可以在线免安装编程学习***')
+print('***python在线开发还可以和物联网教学结合，通过连接MQTT，完成设备数据展示和控制*')
+print('***python在线开发还可以跟influxDB结合，完成大数据查询、处理方面的教学********')
+print('***python在线开发也可以跟电商配合，完成市场运营数据方面的查询、分析的教学*****')
+from js import mqttConnect
+from js import document
+from pyodide.ffi.wrappers import add_event_listener
+
+def onMessage(self):
+  print('收到来自:'+self.data.topic+'的消息:'+self.data.message)
+
+def onError(self):
+  print('连接信息:', self.data.message)
+
+add_event_listener(document, "onMessage", onMessage)
+add_event_listener(document, "onError", onError)
+
+mqttConnect('ws://broker.hivemq.com:8000/mqtt','/pyIDEforIOT/data')
+`
+      that.run()
+    })
     this.configHandel()
     this.terminalHandel()
     this.scriptHandel()
@@ -147,8 +163,7 @@ mqttConnect('ws://broker.emqx.io:8083/mqtt','/pyIDEforIOT/data')
     configHandel() {
       const placeholder = this.$el.querySelector('.py-config-placeholder');
       const Element = document.createElement('py-config');
-      Element.textContent =
-        `
+      Element.textContent = `
           terminal = false
         `;
       placeholder && placeholder.replaceWith(Element);
@@ -160,7 +175,6 @@ mqttConnect('ws://broker.emqx.io:8083/mqtt','/pyIDEforIOT/data')
     },
     // 运行
     run() {
-      console.log(this)
       // eslint-disable-next-line no-undef
       pyscript.interpreter.run(this.code)
     }
@@ -215,7 +229,6 @@ mqttConnect('ws://broker.emqx.io:8083/mqtt','/pyIDEforIOT/data')
 }
 </style>
 <style>
-@import url("../../../public/pyscript.css");
 .CodeMirror{
   height: 100%;
 }

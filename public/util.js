@@ -37,4 +37,15 @@ export function  loadScriptsFromDirectory(directory) {
   });
 }
 
+/**
+ * 动态加载css文件
+ */
+export function  loadCssFromDirectory(url) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = url;
+  document.head.appendChild(link);
+}
+
+
 
