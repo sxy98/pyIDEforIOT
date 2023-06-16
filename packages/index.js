@@ -1,7 +1,5 @@
-// packages / index.js
-
 // 导入单个组件
-import MqttEditor from './mqttEditor/index'
+import MqttEditor from './MqttEditor.vue'
 
 // 以数组的结构保存组件，便于遍历
 const components = [
@@ -25,7 +23,5 @@ if (typeof window !== 'undefined' && window.Vue) {
 
 export default {
   // 导出的对象必须具备一个 install 方法
-  install,
-  // 组件列表
-  ...components
+  install
 }

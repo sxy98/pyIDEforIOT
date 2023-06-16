@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import App from './App.vue';
-import MqttEditor from '../packages/index'
+import Pyideforiot from '../packages'
 import router from './router';
 import './styles/index.scss';
 
 import store from './store';
 
-Vue.use(MqttEditor)
+Vue.use(Pyideforiot)
 
 Vue.config.productionTip = false;
 

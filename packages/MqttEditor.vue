@@ -22,7 +22,7 @@
 <script>
 import * as mqtt from "mqtt/dist/mqtt.min"
 import { codemirror } from 'vue-codemirror'
-import { loadScriptsFromDirectory, loadCssFromDirectory } from '../../../public/util.js'
+import { loadScriptsFromDirectory, loadCssFromDirectory } from '../public/util.js'
 // import base style
 import 'codemirror/lib/codemirror.css'
 // language
@@ -213,7 +213,7 @@ mqttConnect('ws://broker.hivemq.com:8000/mqtt','/pyIDEforIOT/data')
         height: 16px;
         margin-left: 4px;
         &.icon-run {
-          background-image: url(../../../public/icon/run.png);
+          background-image: url(../public/icon/run.png);
           background-size: 100%;
         }
       }

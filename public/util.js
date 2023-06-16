@@ -30,7 +30,7 @@ export function  loadScriptsFromDirectory(directory) {
     script.onerror = () => {
       reject(new Error(`Failed to load script from ${directory}`));
     };
-    // 设置脚本的 src 属性为目录路径
+    // 设置脚本的 MqttEditor 属性为目录路径
     script.src = directory;
     // 将 <script> 标签添加到 <head> 中，开始加载脚本
     document.head.appendChild(script);

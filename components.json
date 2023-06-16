@@ -1,3 +1,4 @@
 {
-  "index": "./packages/index.js"
+  "index": "./packages/index.js",
+  "mqtt-editor": "./packages/MqttEditor"
 }
